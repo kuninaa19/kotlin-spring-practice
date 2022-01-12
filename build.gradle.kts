@@ -18,6 +18,10 @@ repositories {
 	maven { url = uri("https://repo.spring.io/snapshot") }
 }
 
+tasks.withType<Test> {
+	useJUnitPlatform()
+}
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
@@ -31,6 +35,9 @@ dependencies {
 	implementation("com.amazonaws:aws-java-sdk-s3:1.12.131")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.mockk:mockk:1.12.1")
+	testImplementation("io.kotest:kotest-runner-junit5:5.0.3")
+	testImplementation("io.kotest:kotest-assertions-core:5.0.3")
+	testImplementation("io.kotest:kotest-extensions-spring:4.4.3")
 }
 
 configurations {
