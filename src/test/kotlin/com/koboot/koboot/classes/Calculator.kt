@@ -1,4 +1,4 @@
-package com.koboot.koboot
+package com.koboot.koboot.classes
 
 class Calculator() {
 
