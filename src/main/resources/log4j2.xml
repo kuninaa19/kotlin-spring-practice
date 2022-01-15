@@ -1,37 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="INFO">
     <Properties>
-        <Property name="logFileName">koboot</Property>
-        <Property name="consoleLayout">%style{%d{ISO8601}}{black} %highlight{%-5level }[%style{%t}{bright,blue}]
-            %style{%C{1.}}{bright,yellow}: %msg%n%throwable
+        <Property name="infoLogFileName">${date:yyyy}-${date:MM}-${date:dd}</Property>
+        <Property name="errorLogFileName">${date:yyyy}-${date:MM}-${date:dd}.error</Property>
+        <Property name="consoleLayout">%d{yyyy-MM-dd hh:mm:ss.SSS} [%style{%t}{bright,blue}] %5p [%C{1.} - %M] : %msg%n
         </Property>
-        <Property name="fileLayout">%d [%t] %-5level %c(%M:%L) - %m%n</Property>
+        <Property name="fileLayout">%d{yyyy-MM-dd hh:mm:ss.SSS} [%t] %5p [%c(%M:%L) ] : %msg%n</Property>
     </Properties>
 
     <Appenders>
         <Console name="console" target="SYSTEM_OUT">
             <PatternLayout pattern="${consoleLayout}"/>
         </Console>
-        <RollingFile name="file" fileName="logs/${logFileName}.log"
-                     filePattern="logs/${logFileName}.%d{yyyy-MM-dd-hh}.log">
+        <RollingFile name="infoFile" fileName="logs/${date:yyyy}/${date:MM}/${infoLogFileName}.log"
+                     filePattern="logs/%d{yyyy-MM-dd-hh}/${infoLogFileName}.zip">
             <PatternLayout pattern="${fileLayout}"/>
             <Policies>
-                <TimeBasedTriggeringPolicy modulate="true" interval="1"/><!-- 시간별 로그 파일 생성-->
+                <SizeBasedTriggeringPolicy size="10MB"/>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
             </Policies>
-            <DefaultRolloverStrategy max="5" fileIndex="min"/><!-- 롤링 파일 5개 까지 생성 -->
+            <DefaultRolloverStrategy max="500" fileIndex="min"/>
+        </RollingFile>
+        <RollingFile name="errorFile" fileName="logs/${date:yyyy}/${date:MM}/${errorLogFileName}.log"
+                     filePattern="logs/%d{yyyy-MM-dd-hh}/${errorLogFileName}.zip">
+            <PatternLayout pattern="${fileLayout}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+            </Policies>
+            <DefaultRolloverStrategy max="500" fileIndex="min"/>
         </RollingFile>
     </Appenders>
 
     <Loggers>
-        <!-- 스프링 프레임워크에서 찍는건 level을 info로 설정 -->
-        <logger name="org.springframework" level="info" additivity="false">
+        <logger name="org.springframework" level="INFO" additivity="false">
             <AppenderRef ref="console"/>
-            <AppenderRef ref="file"/>
+            <AppenderRef ref="infoFile"/>
         </logger>
-        <!-- rolling file에는 debug, console에는 info 분리하여 처리 가능하다. -->
-        <logger name="com.koboot.koboot" additivity="true">
-            <AppenderRef ref="console" level="info"/>
-            <AppenderRef ref="file" level="debug"/>
+        <logger name="com.koboot.koboot" level="INFO" additivity="false">
+            <AppenderRef ref="console"/>
         </logger>
+        <Root level="ERROR" additivity="false">
+            <AppenderRef ref="console"/>
+            <AppenderRef ref="errorFile"/>
+        </Root>
     </Loggers>
 </Configuration>
