@@ -1,34 +1,81 @@
 package com.koboot.koboot.services
 
+import com.koboot.koboot.dto.UserJoinCompanyDTO
 import com.koboot.koboot.dto.UserReqDTO
 import com.koboot.koboot.dto.UserResDTO
 import com.koboot.koboot.entity.User
+import com.koboot.koboot.repository.CompanyRepository
 import com.koboot.koboot.repository.UserRepository
+import org.apache.http.HttpStatus
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.modelmapper.ModelMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.net.http.HttpResponse
+import javax.transaction.Transactional
+import kotlin.streams.toList
 
 @Service
 class UserService(
     @Autowired private val userRepository: UserRepository,
+    @Autowired private val companyRepository: CompanyRepository,
     @Autowired private val modelMapper: ModelMapper,
 ) {
+    fun getUsers(): List<UserResDTO> {
+        val users = userRepository.findAll()
+        if (users.isEmpty()) {
+            log.error("전체유저가 조회가 안됩니다/")
+            throw Exception("에러요")
+        }
+        val result = users.stream().map { modelMapper.map(it, UserResDTO::class.java) }.toList()
+        log.info(result.toString())
+        return result
+    }
+
     fun userById(id: Long): UserResDTO {
         val anUser = userRepository.findById(id).orElse(null)
-        log.info("로깅테스트",anUser.toString())
+        log.info("유저 조회합니다. $anUser")
         if (anUser != null) {
-            return modelMapper.map(anUser, UserResDTO::class.java)
+            val result = modelMapper.map(anUser, UserResDTO::class.java)
+            log.info("유저 정보 전달합니다.$result")
+            return result
         } else {
-            throw Exception("eeee")
+            throw Exception("에러발생")
+        }
+    }
+
+    @Transactional
+    fun joinACompany(userJoinCompanyDto: UserJoinCompanyDTO): UserResDTO {
+        try {
+            val aCompany = companyRepository.findById(userJoinCompanyDto.companyId).orElse(null)
+            val anUser = userRepository.findById(userJoinCompanyDto.userId).orElse(null)
+
+            anUser.company = aCompany
+
+            val result = UserResDTO.ModelMapper.entityToDto(anUser)
+            log.info("DTO 변환 유저정보 $result")
+
+            return result
+
+        } catch (e: Exception) {
+            log.error("회사 조회 혹은 유저 조회 실패")
+            throw Exception("에러발생")
         }
     }
 
     fun createUser(userReqDTO: UserReqDTO): UserResDTO {
-        log.info("로깅테스트 created")
-        val anUser = userRepository.save(modelMapper.map(userReqDTO, User::class.java))
-        return modelMapper.map(anUser, UserResDTO::class.java)
+        val aCompany = companyRepository.findById(userReqDTO.companyId).orElse(null) ?: throw Exception("조회가 안되네요")
+        val anUser = modelMapper.map(userReqDTO, User::class.java)
+        anUser.company = aCompany
+        userRepository.save(anUser)
+
+        log.info("생성된 유저정보는? $anUser")
+
+        val result = UserResDTO.ModelMapper.entityToDto(anUser)
+        log.info("DTO 변환 우저정보 $result")
+
+        return result
     }
 
     companion object {
