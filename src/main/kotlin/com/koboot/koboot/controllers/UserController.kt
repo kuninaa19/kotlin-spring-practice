@@ -34,7 +34,6 @@ class UserController(@Autowired private val userService: UserService) {
         @RequestBody userJoinCompanyDto : UserJoinCompanyDTO
     ): ResponseEntity<UserResDTO>{
         return ResponseEntity(userService.joinACompany(userJoinCompanyDto), HttpStatus.OK)
-
     }
 
     @PostMapping()
@@ -43,6 +42,14 @@ class UserController(@Autowired private val userService: UserService) {
     ): ResponseEntity<UserResDTO> {
         return ResponseEntity(userService.createUser(userDto), HttpStatus.OK)
     }
+
+    @DeleteMapping("/{id}/leave/company")
+    fun leaveACompany(
+        @PathVariable id: Long
+    ): ResponseEntity<UserResDTO>{
+        return ResponseEntity(userService.leaveACompany(id),HttpStatus.OK)
+    }
+
     companion object {
         private val log: Logger = LogManager.getLogger(this.javaClass.name)
     }

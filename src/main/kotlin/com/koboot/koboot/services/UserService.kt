@@ -52,6 +52,7 @@ class UserService(
             val anUser = userRepository.findById(userJoinCompanyDto.userId).orElse(null)
 
             anUser.company = aCompany
+            aCompany.addUser(anUser)
 
             val result = UserResDTO.ModelMapper.entityToDto(anUser)
             log.info("DTO 변환 유저정보 $result")
@@ -67,15 +68,28 @@ class UserService(
     fun createUser(userReqDTO: UserReqDTO): UserResDTO {
         val aCompany = companyRepository.findById(userReqDTO.companyId).orElse(null) ?: throw Exception("조회가 안되네요")
         val anUser = modelMapper.map(userReqDTO, User::class.java)
-        anUser.company = aCompany
-        userRepository.save(anUser)
-
-        log.info("생성된 유저정보는? $anUser")
+        aCompany.addUser(anUser)
+        companyRepository.save(aCompany)
 
         val result = UserResDTO.ModelMapper.entityToDto(anUser)
         log.info("DTO 변환 우저정보 $result")
 
         return result
+    }
+
+    @Transactional
+    fun leaveACompany(id: Long): UserResDTO {
+        val anUser = userRepository.findById(id).orElse(null) ?: throw Exception("찾을 수 없는 유저")
+
+//        아래와 동일하다
+//        anUser.updateCompany(anUser.company!!)
+        anUser.leaveCompany()
+
+        val result = UserResDTO.ModelMapper.entityToDto(anUser)
+        log.info("DTO 변환 우저정보 $result")
+
+        return result
+
     }
 
     companion object {
