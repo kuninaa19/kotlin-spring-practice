@@ -18,23 +18,20 @@ repositories {
 	maven { url = uri("https://repo.spring.io/snapshot") }
 }
 
-tasks.withType<Test> {
-	useJUnitPlatform()
-}
-
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.6.2")
+	implementation("org.springframework.boot:spring-boot-starter-web:2.6.2")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.modelmapper:modelmapper:2.4.5")
 	implementation("org.springframework.boot:spring-boot-starter-log4j2:2.6.2")
-	implementation("org.springframework.boot:spring-boot-starter-webflux")
-	implementation("mysql:mysql-connector-java")
+	implementation("org.springframework.boot:spring-boot-starter-webflux:2.6.2")
+	implementation("mysql:mysql-connector-java:8.0.25")
+	implementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
 	implementation("com.amazonaws:aws-java-sdk-s3:1.12.131")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("io.mockk:mockk:1.12.1")
+	testImplementation("org.springframework.boot:spring-boot-starter-test:2.6.2")
+	testImplementation("io.mockk:mockk:1.12.2")
 	testImplementation("io.kotest:kotest-runner-junit5:5.0.3")
 	testImplementation("io.kotest:kotest-assertions-core:5.0.3")
 	testImplementation("io.kotest:kotest-extensions-spring:4.4.3")
