@@ -38,3 +38,5 @@ out/
 
 .idea
 src/main/resources/application.yml
+
+logs/
