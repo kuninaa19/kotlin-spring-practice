@@ -6,13 +6,11 @@ import com.koboot.koboot.dto.UserResDTO
 import com.koboot.koboot.entity.User
 import com.koboot.koboot.repository.CompanyRepository
 import com.koboot.koboot.repository.UserRepository
-import org.apache.http.HttpStatus
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.modelmapper.ModelMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.net.http.HttpResponse
 import javax.transaction.Transactional
 import kotlin.streams.toList
 
