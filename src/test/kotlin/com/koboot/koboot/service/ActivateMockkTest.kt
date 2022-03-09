@@ -19,12 +19,12 @@ class ActivateMockkTest() : BehaviorSpec({
 
     Given("새로운 객체를 생성하자") {
         val id: Long = 1
-        val userMock = UserReqDTO(name = "선기철", email = "rlcjfdl0052@dmail.com", age = 27)
+        val userMock = UserReqDTO(name = "선기철", email = "rlcjfdl0052@dmail.com", age = 27, companyId = 1)
         println(userMock.toString())
         When("이메일을 사용한 데이터 조회") {
             every { userRepo.findById(1).orElse(null) } returns null
             every { userService.createUser(userMock) } answers {
-                UserResDTO(id = 1, name = "선기철", email = "rlcjfdl0052@dmail.com", age = 27)
+                UserResDTO(id = 1, name = "선기철", email = "rlcjfdl0052@dmail.com", age = 27, companyName = "Tesla")
             }
 
             val user = userRepo.findById(id).orElse(null)
