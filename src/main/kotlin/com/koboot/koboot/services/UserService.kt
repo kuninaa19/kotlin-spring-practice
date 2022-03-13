@@ -4,12 +4,14 @@ import com.koboot.koboot.dto.UserJoinCompanyDTO
 import com.koboot.koboot.dto.UserReqDTO
 import com.koboot.koboot.dto.UserResDTO
 import com.koboot.koboot.entity.User
+import com.koboot.koboot.errorHandler.CustomException
 import com.koboot.koboot.repository.CompanyRepository
 import com.koboot.koboot.repository.UserRepository
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.modelmapper.ModelMapper
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 import kotlin.streams.toList
@@ -23,11 +25,12 @@ class UserService(
     fun getUsers(): List<UserResDTO> {
         val users = userRepository.findAll()
         if (users.isEmpty()) {
-            log.error("전체유저가 조회가 안됩니다/")
-            throw Exception("에러요")
+            log.error("전체유저가 조회가 안됩니다")
+            throw CustomException(HttpStatus.NOT_FOUND, "user-001", "전체유저가 조회가 안됩니다")
         }
+
         val result = users.stream().map { modelMapper.map(it, UserResDTO::class.java) }.toList()
-        log.info(result.toString())
+        log.info("유저정보 전체 조회")
         return result
     }
 
@@ -36,10 +39,11 @@ class UserService(
         log.info("유저 조회합니다. $anUser")
         if (anUser != null) {
             val result = modelMapper.map(anUser, UserResDTO::class.java)
-            log.info("유저 정보 전달합니다.$result")
+            log.info("유저 상세 정보 : [ 유저 번호 : ${result.id} , 유저 이름 : ${result.name} ]")
             return result
         } else {
-            throw Exception("에러발생")
+            log.error("전체유저가 조회가 안됩니다")
+            throw CustomException(HttpStatus.NOT_FOUND, "user-001", "전체유저가 조회가 안됩니다")
         }
     }
 
@@ -53,13 +57,12 @@ class UserService(
             aCompany.addUser(anUser)
 
             val result = UserResDTO.ModelMapper.entityToDto(anUser)
-            log.info("DTO 변환 유저정보 $result")
+            log.info("DTO 변환 유저정보 : [ 유저 정보 : ${result.name}, 회사 이름 : ${result.companyName} ]")
 
             return result
-
         } catch (e: Exception) {
             log.error("회사 조회 혹은 유저 조회 실패")
-            throw Exception("에러발생")
+            throw CustomException(HttpStatus.NOT_FOUND, "company-NotFound", "회사 정보 조회 실패")
         }
     }
 
@@ -70,7 +73,7 @@ class UserService(
         companyRepository.save(aCompany)
 
         val result = UserResDTO.ModelMapper.entityToDto(anUser)
-        log.info("DTO 변환 우저정보 $result")
+        log.info("DTO 변환 유저정보 : [ 유저 정보 : ${result.name}, 회사 이름 : ${result.companyName} ]")
 
         return result
     }
@@ -84,7 +87,7 @@ class UserService(
         anUser.leaveCompany()
 
         val result = UserResDTO.ModelMapper.entityToDto(anUser)
-        log.info("DTO 변환 우저정보 $result")
+        log.info("DTO 변환 유저정보 : [ 유저 정보 : ${result.name}, 회사 이름 : ${result.companyName} ]")
 
         return result
 
