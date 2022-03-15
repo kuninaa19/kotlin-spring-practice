@@ -1,5 +1,6 @@
 package com.koboot.koboot.entity
 
+import com.koboot.koboot.intercepter.PermissionRole
 import org.hibernate.annotations.DynamicUpdate
 import javax.persistence.*
 
@@ -14,6 +15,8 @@ class User(
     @Column(length = 1000)
     var email: String = "",
     var age: Int = 0,
+    @Enumerated(EnumType.STRING)
+    var role : PermissionRole? = PermissionRole.PERSON,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
@@ -31,6 +34,10 @@ class User(
 
     fun leaveCompany() {
         this.company = null
+    }
+
+    fun updateRole(role: PermissionRole) {
+        this.role = role
     }
 
 //    override fun toString(): String {
