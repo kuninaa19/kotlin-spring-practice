@@ -16,23 +16,28 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/users")
 class UserController(@Autowired private val userService: UserService) {
     @GetMapping
-    fun getUsers(): ResponseEntity<List<UserResDTO>>{
-        return ResponseEntity(userService.getUsers(),HttpStatus.OK)
+    fun getUsers(): ResponseEntity<List<UserResDTO>> {
+        return ResponseEntity(userService.getUsers(), HttpStatus.OK)
+    }
+
+    @GetMapping("/search")
+    fun getUserByName(
+        @RequestParam(name = "name", required = true) name: String
+    ): ResponseEntity<List<UserResDTO>> {
+        return ResponseEntity(userService.getUserByName(name), HttpStatus.OK)
     }
 
     @GetMapping("/{id}")
     fun getUser(
         @PathVariable id: Long
     ): ResponseEntity<UserResDTO> {
-        log.info("로깅테스트")
-        log.error("에러 테스트")
         return ResponseEntity(userService.userById(id), HttpStatus.OK)
     }
 
     @PostMapping("/join/company")
     fun joinACompany(
-        @RequestBody userJoinCompanyDto : UserJoinCompanyDTO
-    ): ResponseEntity<UserResDTO>{
+        @RequestBody userJoinCompanyDto: UserJoinCompanyDTO
+    ): ResponseEntity<UserResDTO> {
         return ResponseEntity(userService.joinACompany(userJoinCompanyDto), HttpStatus.OK)
     }
 
@@ -46,8 +51,8 @@ class UserController(@Autowired private val userService: UserService) {
     @DeleteMapping("/{id}/leave/company")
     fun leaveACompany(
         @PathVariable id: Long
-    ): ResponseEntity<UserResDTO>{
-        return ResponseEntity(userService.leaveACompany(id),HttpStatus.OK)
+    ): ResponseEntity<UserResDTO> {
+        return ResponseEntity(userService.leaveACompany(id), HttpStatus.OK)
     }
 
     companion object {

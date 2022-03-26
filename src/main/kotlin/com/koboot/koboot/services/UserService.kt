@@ -34,6 +34,18 @@ class UserService(
         return result
     }
 
+    fun getUserByName(name: String): List<UserResDTO> {
+        val users = userRepository.search(name)
+
+        if (users.isEmpty()) {
+            log.error("존재하는 유저가 없어요 - [ name : $name ]")
+            throw CustomException(HttpStatus.NOT_FOUND, "user-001", "존재하는 유저가 없어요")
+        }
+        val result = users.stream().map { modelMapper.map(it, UserResDTO::class.java) }.toList()
+        log.info("유저정보 전체 조회")
+        return result
+    }
+
     fun userById(id: Long): UserResDTO {
         val anUser = userRepository.findById(id).orElse(null)
         log.info("유저 조회합니다. $anUser")
