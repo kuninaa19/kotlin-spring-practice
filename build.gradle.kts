@@ -6,11 +6,13 @@ plugins {
 	kotlin("jvm") version "1.6.10"
 	kotlin("plugin.spring") version "1.6.10"
 	kotlin("plugin.jpa") version "1.6.10"
+	kotlin("kapt") version "1.4.10"
 }
 
 group = "com.koboot"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
+val querydslVersion ="5.0.0"
 
 repositories {
 	mavenCentral()
@@ -30,6 +32,11 @@ dependencies {
 	implementation("mysql:mysql-connector-java:8.0.25")
 	implementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
 	implementation("com.amazonaws:aws-java-sdk-s3:1.12.131")
+
+	implementation("com.querydsl:querydsl-jpa:$querydslVersion")
+	kapt("com.querydsl:querydsl-apt:$querydslVersion:jpa")
+	kapt("org.springframework.boot:spring-boot-configuration-processor")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test:2.6.2")
 	testImplementation("io.mockk:mockk:1.12.2")
 	testImplementation("io.kotest:kotest-runner-junit5:5.0.3")
