@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/companies")
 class CompanyController(@Autowired private val companyService: CompanyService) {
 
+    /** @desc @requestAttribute 는 특정 KEY를 가진 REQUEST를 조회한 후 값을 가져옴 */
     @GetMapping
-    fun getCompanies(): ResponseEntity<List<CompanyResDTO>> {
+    fun getCompanies(
+        @RequestAttribute("uid") uid: String
+    ): ResponseEntity<List<CompanyResDTO>> {
         return ResponseEntity(companyService.getCompanies(), HttpStatus.OK)
     }
 
