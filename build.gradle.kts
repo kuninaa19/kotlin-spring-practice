@@ -32,7 +32,7 @@ dependencies {
 	implementation("mysql:mysql-connector-java:8.0.25")
 	implementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
 	implementation("com.amazonaws:aws-java-sdk-s3:1.12.131")
-
+	implementation("com.google.firebase:firebase-admin:8.1.0")
 	implementation("com.querydsl:querydsl-jpa:$querydslVersion")
 	kapt("com.querydsl:querydsl-apt:$querydslVersion:jpa")
 	kapt("org.springframework.boot:spring-boot-configuration-processor")

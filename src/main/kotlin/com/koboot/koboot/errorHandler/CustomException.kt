@@ -2,7 +2,7 @@ package com.koboot.koboot.errorHandler
 
 import org.springframework.http.HttpStatus
 
-class CustomException(private val statusCode: HttpStatus, private val errorCode: String, private val detail: String) :
+open class CustomException(private val statusCode: HttpStatus, private val errorCode: String, private val detail: String) :
     RuntimeException() {
     fun getStatusCode(): HttpStatus {
         return this.statusCode

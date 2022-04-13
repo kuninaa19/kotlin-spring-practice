@@ -30,4 +30,9 @@ class Company(
     override fun toString(): String {
         return "Company(id=$id, name='$name', address='$address', users=$users)"
     }
+
+    @PrePersist
+    fun prePersist(){
+        println("영속성 컨텍스트 관리직전 호출")
+    }
 }
