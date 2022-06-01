@@ -1,0 +1,41 @@
+spring:
+  profiles:
+    active: local
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 30MB
+
+  datasource:
+    url: jdbc:mysql://localhost:3307/test_db?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username: root
+    password: testsql1@
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    properties:
+      hibernate:
+        default_batch_fetch_size: 1000
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        id:
+          new_generator_mappings: true
+        format_sql: true
+        use_sql_comments: true
+        show_sql: true
+        #          spring entity에 맞는 테이블, 컬럼 자동생성옵션
+        #          validate <-  시작시 객체구성과 스키마가 다르다면 예외 발생시킴
+        #          update   <-  시작시 entity에 맞는 테이블, 컬럼 자동생성
+        hbm2ddl:
+          auto: update
+
+logging:
+  level:
+    org:
+      hibernate: info
