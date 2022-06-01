@@ -29,7 +29,7 @@ dependencies {
 	implementation("org.modelmapper:modelmapper:2.4.5")
 	implementation("org.springframework.boot:spring-boot-starter-log4j2:2.6.2")
 	implementation("org.springframework.boot:spring-boot-starter-webflux:2.6.2")
-	implementation("mysql:mysql-connector-java:8.0.25")
+	implementation("mysql:mysql-connector-java:8.0.29")
 	implementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
 	implementation("com.amazonaws:aws-java-sdk-s3:1.12.131")
 	implementation("com.google.firebase:firebase-admin:8.1.0")
