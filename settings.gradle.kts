@@ -6,3 +6,4 @@ pluginManagement {
 	}
 }
 rootProject.name = "koboot"
+include("module-api", "module-core")
